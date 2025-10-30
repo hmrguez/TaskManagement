@@ -1,0 +1,40 @@
+<div class="max-w-[720px] mx-auto my-6 px-4">
+  <mat-card class="mat-elevation-z1">
+    <mat-card-title class="flex items-center gap-3">
+      <button mat-stroked-button color="primary" routerLink="/tasks" aria-label="Back to tasks">
+        <mat-icon>arrow_back</mat-icon>
+        Back
+      </button>
+      <span>Task details</span>
+    </mat-card-title>
+
+    <mat-card-content>
+      <div *ngIf="loading()" class="p-6 text-black/60 flex items-center gap-2">
+        <mat-icon>hourglass_empty</mat-icon>
+        Loading…
+      </div>
+      <div *ngIf="error()" class="p-4 text-red-700">{{ error() }}</div>
+
+      <ng-container *ngIf="!loading() && !error() && task() as t">
+        <div class="space-y-4 p-2">
+          <div class="text-2xl font-semibold flex items-center gap-2">
+            <mat-icon color="primary">check_circle</mat-icon>
+            <span [ngClass]="{'line-through text-gray-500': t.IsCompleted}">{{ t.Title }}</span>
+          </div>
+
+          <div class="text-black/70" *ngIf="t.Description">
+            {{ t.Description }}
+          </div>
+
+          <div class="text-black/70" *ngIf="t.DueDate">
+            Due on: <strong>{{ t.DueDate | date: 'fullDate' }}</strong> at <strong>{{ t.DueDate | date: 'shortTime' }}</strong>
+          </div>
+
+          <div class="text-sm text-black/60">
+            Status: <span [ngClass]="t.IsCompleted ? 'text-green-700' : 'text-amber-700'">{{ t.IsCompleted ? 'Completed' : 'Pending' }}</span>
+          </div>
+        </div>
+      </ng-container>
+    </mat-card-content>
+  </mat-card>
+</div>

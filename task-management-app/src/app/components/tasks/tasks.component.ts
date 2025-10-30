@@ -1,6 +1,7 @@
 import { Component, TemplateRef, ViewChild, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { TasksService } from '../../services/tasks.service';
 import { Task } from '../../models/task.models';
 import { MatCardModule } from '@angular/material/card';
@@ -14,6 +15,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatTimepickerModule } from '@angular/material/timepicker';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-tasks',
@@ -21,6 +23,7 @@ import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dial
   imports: [
     CommonModule,
     FormsModule,
+    RouterLink,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -31,7 +34,8 @@ import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dial
     MatDatepickerModule,
     MatNativeDateModule,
     MatTimepickerModule,
-    MatDialogModule
+    MatDialogModule,
+    MatMenuModule
   ],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.css'
