@@ -2,17 +2,10 @@ using FastEndpoints;
 using TaskManagement.Api.Data;
 using TaskManagement.Api.Models;
 
-namespace TaskManagement.Api.Endpoints.Todos;
+namespace TaskManagement.Api.Features.Todos;
 
-public class CreateTodoEndpoint : Endpoint<CreateTodoRequest, TodoResponse>
+public class CreateTodoEndpoint(ApplicationDbContext dbContext) : Endpoint<CreateTodoRequest, TodoResponse>
 {
-    private readonly ApplicationDbContext _dbContext;
-
-    public CreateTodoEndpoint(ApplicationDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
     public override void Configure()
     {
         Post("/api/todos");
@@ -38,8 +31,8 @@ public class CreateTodoEndpoint : Endpoint<CreateTodoRequest, TodoResponse>
             IsCompleted = false
         };
 
-        _dbContext.Todos.Add(todo);
-        await _dbContext.SaveChangesAsync(ct);
+        dbContext.Todos.Add(todo);
+        await dbContext.SaveChangesAsync(ct);
 
         await SendAsync(new TodoResponse
         {

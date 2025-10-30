@@ -3,17 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using TaskManagement.Api.Data;
 using TaskManagement.Api.Models;
 
-namespace TaskManagement.Api.Endpoints.Todos;
+namespace TaskManagement.Api.Features.Todos;
 
-public class UpdateTodoEndpoint : Endpoint<UpdateTodoRequest, TodoResponse>
+public class UpdateTodoEndpoint(ApplicationDbContext dbContext) : Endpoint<UpdateTodoRequest, TodoResponse>
 {
-    private readonly ApplicationDbContext _dbContext;
-
-    public UpdateTodoEndpoint(ApplicationDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
     public override void Configure()
     {
         Put("/api/todos/{id}");
@@ -32,7 +25,7 @@ public class UpdateTodoEndpoint : Endpoint<UpdateTodoRequest, TodoResponse>
 
         var id = Route<int>("id");
 
-        var todo = await _dbContext.Todos
+        var todo = await dbContext.Todos
             .Where(t => t.Id == id && t.UserId == userId)
             .FirstOrDefaultAsync(ct);
 
@@ -55,7 +48,7 @@ public class UpdateTodoEndpoint : Endpoint<UpdateTodoRequest, TodoResponse>
         if (req.DueDate.HasValue)
             todo.DueDate = req.DueDate;
 
-        await _dbContext.SaveChangesAsync(ct);
+        await dbContext.SaveChangesAsync(ct);
 
         await SendAsync(new TodoResponse
         {

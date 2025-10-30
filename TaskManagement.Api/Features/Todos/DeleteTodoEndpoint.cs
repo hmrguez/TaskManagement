@@ -2,17 +2,10 @@ using FastEndpoints;
 using Microsoft.EntityFrameworkCore;
 using TaskManagement.Api.Data;
 
-namespace TaskManagement.Api.Endpoints.Todos;
+namespace TaskManagement.Api.Features.Todos;
 
-public class DeleteTodoEndpoint : Endpoint<EmptyRequest>
+public class DeleteTodoEndpoint(ApplicationDbContext dbContext) : Endpoint<EmptyRequest>
 {
-    private readonly ApplicationDbContext _dbContext;
-
-    public DeleteTodoEndpoint(ApplicationDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
     public override void Configure()
     {
         Delete("/api/todos/{id}");
@@ -31,7 +24,7 @@ public class DeleteTodoEndpoint : Endpoint<EmptyRequest>
 
         var id = Route<int>("id");
 
-        var todo = await _dbContext.Todos
+        var todo = await dbContext.Todos
             .Where(t => t.Id == id && t.UserId == userId)
             .FirstOrDefaultAsync(ct);
 
@@ -41,8 +34,8 @@ public class DeleteTodoEndpoint : Endpoint<EmptyRequest>
             return;
         }
 
-        _dbContext.Todos.Remove(todo);
-        await _dbContext.SaveChangesAsync(ct);
+        dbContext.Todos.Remove(todo);
+        await dbContext.SaveChangesAsync(ct);
 
         await SendNoContentAsync(ct);
     }

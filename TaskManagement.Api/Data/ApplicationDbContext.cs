@@ -1,16 +1,12 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using TaskManagement.Api.Models;
+using TaskManagement.Api.Features.Auth;
+using TaskManagement.Api.Features.Todos;
 
 namespace TaskManagement.Api.Data;
 
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<User>(options)
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options)
-    {
-    }
-
     public DbSet<Todo> Todos => Set<Todo>();
 
     protected override void OnModelCreating(ModelBuilder builder)

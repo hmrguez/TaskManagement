@@ -1,18 +1,12 @@
 using FastEndpoints;
+using Microsoft.EntityFrameworkCore;
 using TaskManagement.Api.Data;
 using TaskManagement.Api.Models;
 
-namespace TaskManagement.Api.Endpoints.Todos;
+namespace TaskManagement.Api.Features.Todos;
 
-public class GetTodoByIdEndpoint : Endpoint<EmptyRequest, TodoResponse>
+public class GetTodoByIdEndpoint(ApplicationDbContext dbContext) : Endpoint<EmptyRequest, TodoResponse>
 {
-    private readonly ApplicationDbContext _dbContext;
-
-    public GetTodoByIdEndpoint(ApplicationDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
     public override void Configure()
     {
         Get("/api/todos/{id}");
@@ -31,7 +25,7 @@ public class GetTodoByIdEndpoint : Endpoint<EmptyRequest, TodoResponse>
 
         var id = Route<int>("id");
 
-        var todo = await _dbContext.Todos
+        var todo = await dbContext.Todos
             .Where(t => t.Id == id && t.UserId == userId)
             .FirstOrDefaultAsync(ct);
 

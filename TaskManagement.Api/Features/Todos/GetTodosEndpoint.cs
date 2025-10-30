@@ -3,17 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using TaskManagement.Api.Data;
 using TaskManagement.Api.Models;
 
-namespace TaskManagement.Api.Endpoints.Todos;
+namespace TaskManagement.Api.Features.Todos;
 
-public class GetTodosEndpoint : Endpoint<GetTodosRequest, PagedTodosResponse>
+public class GetTodosEndpoint(ApplicationDbContext dbContext) : Endpoint<GetTodosRequest, PagedTodosResponse>
 {
-    private readonly ApplicationDbContext _dbContext;
-
-    public GetTodosEndpoint(ApplicationDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
     public override void Configure()
     {
         Get("/api/todos");
@@ -37,7 +30,7 @@ public class GetTodosEndpoint : Endpoint<GetTodosRequest, PagedTodosResponse>
         if (pageSize < 1) pageSize = 10;
         if (pageSize > 100) pageSize = 100;
 
-        var query = _dbContext.Todos.Where(t => t.UserId == userId);
+        var query = dbContext.Todos.Where(t => t.UserId == userId);
 
         var totalCount = await query.CountAsync(ct);
         var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
