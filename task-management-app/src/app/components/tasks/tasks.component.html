@@ -1,32 +1,32 @@
-<div class="tasks-container">
+<div class="max-w-[960px] mx-auto my-4 px-4">
   <mat-card class="mat-elevation-z1">
     <mat-card-title>Tasks</mat-card-title>
     <mat-card-content>
-      <section class="create-task">
+      <section class="mb-4">
         <h3>Create a new task</h3>
-        <div class="form-row">
-          <mat-form-field appearance="outline" class="grow">
+        <div class="flex gap-3 flex-wrap items-end">
+          <mat-form-field class="flex-1 basis-[220px]">
             <mat-label>Task title</mat-label>
             <input matInput type="text" [(ngModel)]="newTitle" />
           </mat-form-field>
-          <mat-form-field appearance="outline" class="grow">
+          <mat-form-field class="flex-1 basis-[220px]">
             <mat-label>Description</mat-label>
             <input matInput type="text" [(ngModel)]="newDescription" />
           </mat-form-field>
-          <mat-form-field appearance="outline">
+          <mat-form-field>
             <mat-label>Due date</mat-label>
             <input matInput [matDatepicker]="newPicker" [(ngModel)]="newDueDate" />
             <mat-datepicker-toggle matIconSuffix [for]="newPicker"></mat-datepicker-toggle>
             <mat-datepicker #newPicker></mat-datepicker>
           </mat-form-field>
-          <mat-form-field appearance="outline">
+          <mat-form-field>
             <mat-label>Time</mat-label>
             <input matInput [matTimepicker]="newTimePicker" [(ngModel)]="newDueDate" [ngModelOptions]="{updateOn: 'blur'}" />
             <mat-timepicker-toggle matIconSuffix [for]="newTimePicker"></mat-timepicker-toggle>
             <mat-timepicker #newTimePicker></mat-timepicker>
           </mat-form-field>
           <button mat-raised-button color="primary" (click)="createTask()">
-            <mat-icon>add</mat-icon>
+            <mat-icon class="mr-1">add</mat-icon>
             Add Task
           </button>
         </div>
@@ -34,22 +34,22 @@
 
       <mat-divider></mat-divider>
 
-      <div *ngIf="error()" class="error mat-body-2">{{ error() }}</div>
+      <div *ngIf="error()" class="text-red-700 mt-2 mat-body-2">{{ error() }}</div>
 
-      <section class="list" *ngIf="!loading(); else loadingTpl">
-        <mat-card class="task mat-elevation-z0" *ngFor="let t of tasks()">
-          <div class="left">
+      <section class="flex flex-col gap-2" *ngIf="!loading(); else loadingTpl">
+        <mat-card class="flex justify-between items-start p-3 mat-elevation-z0" *ngFor="let t of tasks()">
+          <div class="flex gap-3 items-start">
             <mat-checkbox [checked]="t.IsCompleted" (change)="toggleCompleted(t)"></mat-checkbox>
-            <div class="info" *ngIf="editingId !== t.Id; else editTpl">
-              <div class="title" [class.completed]="t.IsCompleted">{{ t.Title }}</div>
-              <div class="meta">
+            <div *ngIf="editingId !== t.Id; else editTpl">
+              <div class="font-semibold" [ngClass]="{'line-through text-gray-500': t.IsCompleted}">{{ t.Title }}</div>
+              <div class="text-sm text-gray-500">
                 <span *ngIf="t.Description">{{ t.Description }}</span>
                 <span *ngIf="t.DueDate">Due: {{ t.DueDate | date: 'short' }}</span>
               </div>
             </div>
           </div>
 
-          <div class="actions" *ngIf="editingId !== t.Id">
+          <div class="flex items-center gap-2" *ngIf="editingId !== t.Id">
             <button mat-button color="primary" (click)="startEdit(t)">
               <mat-icon>edit</mat-icon>
               Edit
@@ -61,34 +61,34 @@
           </div>
 
           <ng-template #editTpl>
-            <div class="edit-form">
-              <mat-form-field appearance="outline" class="grow">
+            <div class="flex gap-3 flex-wrap items-end mt-2">
+              <mat-form-field class="flex-1 basis-[220px]">
                 <mat-label>Title</mat-label>
                 <input matInput type="text" [(ngModel)]="editTitle" />
               </mat-form-field>
-              <mat-form-field appearance="outline" class="grow">
+              <mat-form-field class="flex-1 basis-[220px]">
                 <mat-label>Description</mat-label>
                 <input matInput type="text" [(ngModel)]="editDescription" />
               </mat-form-field>
-              <mat-form-field appearance="outline">
+              <mat-form-field>
                 <mat-label>Due date</mat-label>
                 <input matInput [matDatepicker]="editPicker" [(ngModel)]="editDueDate" />
                 <mat-datepicker-toggle matIconSuffix [for]="editPicker"></mat-datepicker-toggle>
                 <mat-datepicker #editPicker></mat-datepicker>
               </mat-form-field>
-              <mat-form-field appearance="outline">
+              <mat-form-field>
                 <mat-label>Time</mat-label>
                 <input matInput [matTimepicker]="editTimePicker" [(ngModel)]="editDueDate" [ngModelOptions]="{updateOn: 'blur'}" />
                 <mat-timepicker-toggle matIconSuffix [for]="editTimePicker"></mat-timepicker-toggle>
                 <mat-timepicker #editTimePicker></mat-timepicker>
               </mat-form-field>
               <button mat-raised-button color="primary" (click)="saveEdit(t)">Save</button>
-              <button mat-button (click)="cancelEdit()">Cancel</button>
+              <button mat-button class="ml-1" (click)="cancelEdit()">Cancel</button>
             </div>
           </ng-template>
         </mat-card>
 
-        <div class="pagination">
+        <div class="flex justify-center items-center gap-3 mt-4">
           <button mat-stroked-button (click)="prevPage()" [disabled]="pageNumber() <= 1">Prev</button>
           <span>Page {{ pageNumber() }}</span>
           <button mat-stroked-button (click)="nextPage()" [disabled]="pageNumber() * pageSize() >= totalCount()">Next</button>
@@ -96,7 +96,7 @@
       </section>
 
       <ng-template #loadingTpl>
-        <div class="loading">
+        <div class="p-4 text-center flex gap-2 items-center justify-center text-black/60">
           <mat-icon>hourglass_empty</mat-icon>
           Loading tasks…
         </div>

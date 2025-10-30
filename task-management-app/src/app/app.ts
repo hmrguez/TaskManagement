@@ -12,20 +12,19 @@ import {MatIconModule} from '@angular/material/icon';
   ],
   template: `
     <mat-toolbar color="primary" class="mat-elevation-z2">
-      <button mat-button routerLink="/tasks" class="brand">
+      <button mat-button routerLink="/tasks" class="flex items-center gap-2">
         <mat-icon>check_circle</mat-icon>
         <span>{{ title() }}</span>
       </button>
-      <span class="spacer"></span>
-      <a mat-button routerLink="/tasks">Tasks</a>
+      <span class="flex-1"></span>
       <a mat-button routerLink="/login" *ngIf="!auth.isAuthenticated()">Login</a>
-      <span class="welcome" *ngIf="auth.isAuthenticated()">Hello, {{ auth.user()?.userName || auth.user()?.email }}</span>
+      <span class="mr-2" *ngIf="auth.isAuthenticated()">Hello, {{ auth.user()?.userName || auth.user()?.email }}</span>
       <button mat-stroked-button color="accent" *ngIf="auth.isAuthenticated()" (click)="logout()">
         <mat-icon>logout</mat-icon>
         Logout
       </button>
     </mat-toolbar>
-    <main class="main">
+    <main class="p-4">
       <router-outlet></router-outlet>
     </main>
   `,

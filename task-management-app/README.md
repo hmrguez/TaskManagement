@@ -2,6 +2,33 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.2.0.
 
+## Tailwind CSS
+
+Tailwind CSS is installed and configured.
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Start the dev server:
+
+```bash
+npm start
+```
+
+3. Use Tailwind utility classes directly in your templates, e.g.:
+
+```html
+<div class="p-4 bg-blue-500 text-white rounded">Hello Tailwind</div>
+```
+
+Configuration files:
+- tailwind.config.js (content globs set to src/**/*.html,ts)
+- postcss.config.js (enables tailwindcss and autoprefixer)
+- src/styles.css includes the @tailwind directives
+
 ## Development server
 
 To start a local development server, run:
