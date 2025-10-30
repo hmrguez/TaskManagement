@@ -39,6 +39,7 @@ public class GetTodosEndpoint(ApplicationDbContext dbContext) : Endpoint<GetTodo
             .OrderBy(t => t.Id)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
+            .Where(x => x.Title.Contains(req.SearchText) || x.Description.Contains(req.SearchText))
             .Select(t => new TodoResponse
             {
                 Id = t.Id,

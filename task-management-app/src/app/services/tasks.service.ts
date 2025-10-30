@@ -10,8 +10,11 @@ export class TasksService {
 
   constructor(private http: HttpClient) {}
 
-  getTasks(pageNumber = 1, pageSize = 10): Observable<PagedResult<Task>> {
-    const params = new HttpParams().set('pageNumber', pageNumber).set('pageSize', pageSize);
+  getTasks(pageNumber = 1, pageSize = 10, searchText?: string): Observable<PagedResult<Task>> {
+    let params = new HttpParams().set('pageNumber', pageNumber).set('pageSize', pageSize);
+    if (searchText && searchText.trim().length > 0) {
+      params = params.set('searchText', searchText.trim());
+    }
     return this.http.get<PagedResult<Task>>(this.base, { params });
   }
 

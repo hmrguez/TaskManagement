@@ -1,4 +1,4 @@
-import { Component, effect, signal } from '@angular/core';
+import { Component, TemplateRef, ViewChild, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TasksService } from '../../services/tasks.service';
@@ -13,6 +13,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatTimepickerModule } from '@angular/material/timepicker';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-tasks',
@@ -29,7 +30,8 @@ import { MatTimepickerModule } from '@angular/material/timepicker';
     MatDividerModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatTimepickerModule
+    MatTimepickerModule,
+    MatDialogModule
   ],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.css'
@@ -43,6 +45,9 @@ export class TasksComponent {
   loading = signal(false);
   error = signal<string | null>(null);
 
+  // search
+  searchText = signal('');
+
   // create/edit
   newTitle = '';
   newDescription = '';
@@ -53,9 +58,15 @@ export class TasksComponent {
   editDescription = '';
   editDueDate: Date | null = null;
 
-  constructor(private tasksApi: TasksService) {
+  @ViewChild('createTaskDialog') createTaskDialog!: TemplateRef<any>;
+  private dialogRef?: MatDialogRef<any>;
+
+  constructor(private tasksApi: TasksService, private dialog: MatDialog) {
     effect(() => {
-      // refetch when page changes
+      // refetch when page or search changes
+      // touch the signals to create dependency
+      this.pageNumber();
+      this.searchText();
       this.fetchTasks();
     });
   }
@@ -63,7 +74,7 @@ export class TasksComponent {
   fetchTasks() {
     this.loading.set(true);
     this.error.set(null);
-    this.tasksApi.getTasks(this.pageNumber(), this.pageSize()).subscribe({
+    this.tasksApi.getTasks(this.pageNumber(), this.pageSize(), this.searchText()).subscribe({
       next: (res) => {
         this.tasks.set(res.Todos);
         this.totalCount.set(res.TotalCount);
@@ -74,6 +85,22 @@ export class TasksComponent {
         this.loading.set(false);
       }
     });
+  }
+
+  applySearch(text: string) {
+    this.searchText.set(text);
+    this.pageNumber.set(1);
+  }
+
+  openCreateDialog() {
+    this.newTitle = '';
+    this.newDescription = '';
+    this.newDueDate = null;
+    this.dialogRef = this.dialog.open(this.createTaskDialog, { width: '640px' });
+  }
+
+  closeCreateDialog() {
+    this.dialogRef?.close();
   }
 
   createTask() {
@@ -88,6 +115,7 @@ export class TasksComponent {
         this.newTitle = '';
         this.newDescription = '';
         this.newDueDate = null;
+        this.closeCreateDialog();
         this.fetchTasks();
       },
       error: () => {
