@@ -25,21 +25,22 @@
           </div>
         </div>
       </div>
+
       <div class="actions" *ngIf="editingId !== t.Id">
         <button (click)="startEdit(t)">Edit</button>
         <button (click)="deleteTask(t)" class="danger">Delete</button>
       </div>
-    </div>
 
-    <ng-template #editTpl>
-      <div class="edit-form">
-        <input type="text" [(ngModel)]="editTitle" />
-        <input type="text" [(ngModel)]="editDescription" placeholder="Description" />
-        <input type="datetime-local" [(ngModel)]="editDueDate" />
-<!--        <button (click)="saveEdit(t)">Save</button>-->
-        <button (click)="cancelEdit()">Cancel</button>
-      </div>
-    </ng-template>
+      <ng-template #editTpl>
+        <div class="edit-form">
+          <input type="text" [(ngModel)]="editTitle" />
+          <input type="text" [(ngModel)]="editDescription" placeholder="Description" />
+          <input type="datetime-local" [(ngModel)]="editDueDate" />
+          <button (click)="saveEdit(t)">Save</button>
+          <button (click)="cancelEdit()">Cancel</button>
+        </div>
+      </ng-template>
+    </div>
 
     <div class="pagination">
       <button (click)="prevPage()" [disabled]="pageNumber() <= 1">Prev</button>
