@@ -14,7 +14,7 @@ public class CreateTodoEndpoint(ApplicationDbContext dbContext) : Endpoint<Creat
 
     public override async Task HandleAsync(CreateTodoRequest req, CancellationToken ct)
     {
-        var userId = User.FindFirst("UserId")?.Value;
+        var userId = User.FindFirst("userId")?.Value;
 
         if (string.IsNullOrEmpty(userId))
         {

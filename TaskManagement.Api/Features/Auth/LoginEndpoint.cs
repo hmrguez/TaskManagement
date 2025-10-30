@@ -4,19 +4,9 @@ using TaskManagement.Api.Models;
 
 namespace TaskManagement.Api.Features.Auth;
 
-public class LoginEndpoint : Endpoint<LoginRequest, LoginResponse>
+public class LoginEndpoint(UserManager<User> userManager, SignInManager<User> signInManager, IJwtService jwtService)
+    : Endpoint<LoginRequest, LoginResponse>
 {
-    private readonly UserManager<User> _userManager;
-    private readonly SignInManager<User> _signInManager;
-    private readonly IJwtService _jwtService;
-
-    public LoginEndpoint(UserManager<User> userManager, SignInManager<User> signInManager, IJwtService jwtService)
-    {
-        _userManager = userManager;
-        _signInManager = signInManager;
-        _jwtService = jwtService;
-    }
-
     public override void Configure()
     {
         Post("/auth/login");
@@ -34,7 +24,7 @@ public class LoginEndpoint : Endpoint<LoginRequest, LoginResponse>
     public override async Task HandleAsync(LoginRequest req, CancellationToken ct)
     {
         // Find user by email
-        var user = await _userManager.FindByEmailAsync(req.Email);
+        var user = await userManager.FindByEmailAsync(req.Email);
         if (user == null)
         {
             await SendAsync(new LoginResponse(), 401, ct);
@@ -42,7 +32,7 @@ public class LoginEndpoint : Endpoint<LoginRequest, LoginResponse>
         }
 
         // Check password
-        var result = await _signInManager.CheckPasswordSignInAsync(user, req.Password, lockoutOnFailure: false);
+        var result = await signInManager.CheckPasswordSignInAsync(user, req.Password, lockoutOnFailure: false);
         if (!result.Succeeded)
         {
             await SendAsync(new LoginResponse(), 401, ct);
@@ -50,7 +40,7 @@ public class LoginEndpoint : Endpoint<LoginRequest, LoginResponse>
         }
 
         // Generate JWT token
-        var token = _jwtService.GenerateToken(user);
+        var token = jwtService.GenerateToken(user);
 
         var response = new LoginResponse
         {

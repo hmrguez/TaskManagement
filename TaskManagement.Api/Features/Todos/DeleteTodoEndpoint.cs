@@ -14,7 +14,7 @@ public class DeleteTodoEndpoint(ApplicationDbContext dbContext) : Endpoint<Empty
 
     public override async Task HandleAsync(EmptyRequest req, CancellationToken ct)
     {
-        var userId = User.FindFirst("UserId")?.Value;
+        var userId = User.FindFirst("userId")?.Value;
 
         if (string.IsNullOrEmpty(userId))
         {

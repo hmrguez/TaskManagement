@@ -82,7 +82,6 @@ app.UseAuthorization();
 
 app.UseFastEndpoints(c =>
 {
-    c.Endpoints.RoutePrefix = "api";
     c.Serializer.Options.PropertyNamingPolicy = null; // Use PascalCase
 });
 

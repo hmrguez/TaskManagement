@@ -1,6 +1,151 @@
-@TaskManagement.Api_HostAddress = http://localhost:5115
+@API = http://localhost:5115
 
-GET {{TaskManagement.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+# Variables for authentication
+@userEmail = test@example.com
+@userName = testuser
+@password = Test123!
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI2OTgzNGU1Ni01NGUzLTRjNTEtYWQwMC0xYmFlY2FmNzJmN2YiLCJ1bmlxdWVfbmFtZSI6InRlc3R1c2VyIiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwidXNlcklkIjoiNjk4MzRlNTYtNTRlMy00YzUxLWFkMDAtMWJhZWNhZjcyZjdmIiwibmJmIjoxNzYxODQ0NjM3LCJleHAiOjE3NjE5MzEwMzcsImlhdCI6MTc2MTg0NDYzNywiaXNzIjoiVGFza01hbmFnZW1lbnQuQXBpIiwiYXVkIjoiVGFza01hbmFnZW1lbnQuQXBpIn0.9TZLYkYqHjLaf9uXY7UJ-kj_IX4-vcx3LHYWE3OGlnY
 
-###
+### 1. Sign Up - Create a new user account
+POST {{API}}/auth/signup
+Content-Type: application/json
+
+{
+  "email": "{{userEmail}}",
+  "userName": "{{userName}}",
+  "password": "{{password}}"
+}
+
+### 2. Login - Get authentication token
+# @name login
+POST {{API}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{userEmail}}",
+  "password": "{{password}}"
+}
+
+### 3. Create Todo #1 - Simple todo
+POST {{API}}/api/todos
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "Complete project documentation",
+  "description": "Write comprehensive documentation for the task management API",
+  "dueDate": "2024-11-15T17:00:00Z"
+}
+
+### 4. Create Todo #2 - Todo without due date
+POST {{API}}/api/todos
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "Review code",
+  "description": "Review pull requests and provide feedback"
+}
+
+### 5. Create Todo #3 - Urgent todo
+POST {{API}}/api/todos
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "Fix critical bug",
+  "description": "Investigate and fix the authentication issue reported by users",
+  "dueDate": "2024-11-01T09:00:00Z"
+}
+
+### 6. Get All Todos - Default pagination
+GET {{API}}/api/todos
+Authorization: Bearer {{token}}
+
+### 7. Get All Todos - With pagination parameters
+GET {{API}}/api/todos?pageNumber=1&pageSize=5
+Authorization: Bearer {{token}}
+
+### 8. Get Todo by ID - Replace {id} with actual todo ID from create response
+GET {{API}}/api/todos/1
+Authorization: Bearer {{token}}
+
+### 9. Update Todo - Mark as completed
+PUT {{API}}/api/todos/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "isCompleted": true
+}
+
+### 10. Update Todo - Update title and description
+PUT {{API}}/api/todos/2
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "Review code and merge PRs",
+  "description": "Review all pending pull requests, provide feedback, and merge approved ones",
+  "isCompleted": false
+}
+
+### 11. Update Todo - Change due date
+PUT {{API}}/api/todos/3
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "dueDate": "2024-11-02T12:00:00Z"
+}
+
+### 12. Get All Todos After Updates
+GET {{API}}/api/todos
+Authorization: Bearer {{token}}
+
+### 13. Delete a Todo
+DELETE {{API}}/api/todos/1
+Authorization: Bearer {{token}}
+
+### 14. Verify Deletion - Get all todos again
+GET {{API}}/api/todos
+Authorization: Bearer {{token}}
+
+### 15. Test Error Cases - Try to access non-existent todo
+GET {{API}}/api/todos/999
+Authorization: Bearer {{token}}
+
+### 16. Test Error Cases - Try to update non-existent todo
+PUT {{API}}/api/todos/999
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "This should fail"
+}
+
+### 17. Test Error Cases - Try to delete non-existent todo
+DELETE {{API}}/api/todos/999
+Authorization: Bearer {{token}}
+
+### 18. Test Unauthorized Access - Request without token
+GET {{API}}/api/todos
+
+### 19. Test Invalid Login
+POST {{API}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "wrong@example.com",
+  "password": "wrongpassword"
+}
+
+### 20. Test Duplicate Sign Up
+POST {{API}}/auth/signup
+Content-Type: application/json
+
+{
+  "email": "{{userEmail}}",
+  "userName": "anotheruser",
+  "password": "{{password}}"
+}

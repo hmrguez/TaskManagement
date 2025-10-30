@@ -4,17 +4,9 @@ using TaskManagement.Api.Models;
 
 namespace TaskManagement.Api.Features.Auth;
 
-public class SignUpEndpoint : Endpoint<SignUpRequest, SignUpResponse>
+public class SignUpEndpoint(UserManager<User> userManager, IJwtService jwtService)
+    : Endpoint<SignUpRequest, SignUpResponse>
 {
-    private readonly UserManager<User> _userManager;
-    private readonly IJwtService _jwtService;
-
-    public SignUpEndpoint(UserManager<User> userManager, IJwtService jwtService)
-    {
-        _userManager = userManager;
-        _jwtService = jwtService;
-    }
-
     public override void Configure()
     {
         Post("/auth/signup");
@@ -32,7 +24,7 @@ public class SignUpEndpoint : Endpoint<SignUpRequest, SignUpResponse>
     public override async Task HandleAsync(SignUpRequest req, CancellationToken ct)
     {
         // Check if user already exists
-        var existingUser = await _userManager.FindByEmailAsync(req.Email);
+        var existingUser = await userManager.FindByEmailAsync(req.Email);
         if (existingUser != null)
         {
             await SendAsync(new SignUpResponse(), 409, ct);
@@ -47,7 +39,7 @@ public class SignUpEndpoint : Endpoint<SignUpRequest, SignUpResponse>
             EmailConfirmed = true // For simplicity, we'll auto-confirm emails
         };
 
-        var result = await _userManager.CreateAsync(user, req.Password);
+        var result = await userManager.CreateAsync(user, req.Password);
         
         if (!result.Succeeded)
         {
@@ -60,7 +52,7 @@ public class SignUpEndpoint : Endpoint<SignUpRequest, SignUpResponse>
         }
 
         // Generate JWT token
-        var token = _jwtService.GenerateToken(user);
+        var token = jwtService.GenerateToken(user);
 
         var response = new SignUpResponse
         {

@@ -15,7 +15,7 @@ public class GetTodoByIdEndpoint(ApplicationDbContext dbContext) : Endpoint<Empt
 
     public override async Task HandleAsync(EmptyRequest req, CancellationToken ct)
     {
-        var userId = User.FindFirst("UserId")?.Value;
+        var userId = User.FindFirst("userId")?.Value;
 
         if (string.IsNullOrEmpty(userId))
         {

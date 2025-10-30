@@ -15,7 +15,7 @@ public class UpdateTodoEndpoint(ApplicationDbContext dbContext) : Endpoint<Updat
 
     public override async Task HandleAsync(UpdateTodoRequest req, CancellationToken ct)
     {
-        var userId = User.FindFirst("UserId")?.Value;
+        var userId = User.FindFirst("userId")?.Value;
 
         if (string.IsNullOrEmpty(userId))
         {
