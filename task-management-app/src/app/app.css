@@ -1,0 +1,7 @@
+.header{display:flex;justify-content:space-between;align-items:center;padding:.75rem 1rem;border-bottom:1px solid #e5e7eb;background:#f8fafc;position:sticky;top:0}
+.title{margin:0;font-size:1.25rem}
+.title a{text-decoration:none;color:#111827}
+.nav{display:flex;gap:.75rem;align-items:center}
+.nav a{color:#2563eb;text-decoration:none}
+.nav button{border:none;background:#ef4444;color:#fff;padding:.4rem .6rem;border-radius:6px;cursor:pointer}
+.main{padding:1rem}

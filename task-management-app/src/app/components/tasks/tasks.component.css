@@ -1,0 +1,17 @@
+.tasks-container{max-width:900px;margin:1rem auto;padding:0 1rem}
+.create-task{margin-bottom:1rem}
+.form-row{display:flex;gap:.5rem;flex-wrap:wrap}
+.form-row input{padding:.5rem;border:1px solid #d1d5db;border-radius:6px}
+.form-row button{padding:.5rem .75rem;border:none;background:#16a34a;color:#fff;border-radius:6px;cursor:pointer}
+.list{display:flex;flex-direction:column;gap:.5rem}
+.task{display:flex;justify-content:space-between;align-items:center;padding:.5rem;border:1px solid #e5e7eb;border-radius:8px;background:#fff}
+.left{display:flex;gap:.75rem;align-items:flex-start}
+.title{font-weight:600}
+.title.completed{text-decoration:line-through;color:#6b7280}
+.meta{font-size:.85rem;color:#6b7280}
+.actions button{margin-left:.5rem;border:none;padding:.4rem .6rem;border-radius:6px;background:#2563eb;color:#fff;cursor:pointer}
+.actions .danger{background:#dc2626}
+.edit-form{display:flex;gap:.5rem;flex-wrap:wrap}
+.pagination{display:flex;justify-content:center;align-items:center;gap:.75rem;margin-top:1rem}
+.loading{padding:1rem;text-align:center}
+.error{color:#b91c1c;margin:.5rem 0}

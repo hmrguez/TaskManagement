@@ -1,0 +1,54 @@
+<div class="tasks-container">
+  <h2>Tasks</h2>
+
+  <div class="create-task">
+    <h3>Create a new task</h3>
+    <div class="form-row">
+      <input type="text" placeholder="Task title" [(ngModel)]="newTitle" />
+      <input type="text" placeholder="Task description" [(ngModel)]="newDescription" />
+      <input type="datetime-local" [(ngModel)]="newDueDate" />
+      <button (click)="createTask()">Add Task</button>
+    </div>
+  </div>
+
+  <div *ngIf="error()" class="error">{{ error() }}</div>
+
+  <div class="list" *ngIf="!loading(); else loadingTpl">
+    <div class="task" *ngFor="let t of tasks()">
+      <div class="left">
+        <input type="checkbox" [checked]="t.IsCompleted" (change)="toggleCompleted(t)" />
+        <div class="info" *ngIf="editingId !== t.Id; else editTpl">
+          <div class="title" [class.completed]="t.IsCompleted">{{ t.Title }}</div>
+          <div class="meta">
+            <span *ngIf="t.Description">{{ t.Description }}</span>
+            <span *ngIf="t.DueDate">Due: {{ t.DueDate | date: 'short' }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="actions" *ngIf="editingId !== t.Id">
+        <button (click)="startEdit(t)">Edit</button>
+        <button (click)="deleteTask(t)" class="danger">Delete</button>
+      </div>
+    </div>
+
+    <ng-template #editTpl>
+      <div class="edit-form">
+        <input type="text" [(ngModel)]="editTitle" />
+        <input type="text" [(ngModel)]="editDescription" placeholder="Description" />
+        <input type="datetime-local" [(ngModel)]="editDueDate" />
+<!--        <button (click)="saveEdit(t)">Save</button>-->
+        <button (click)="cancelEdit()">Cancel</button>
+      </div>
+    </ng-template>
+
+    <div class="pagination">
+      <button (click)="prevPage()" [disabled]="pageNumber() <= 1">Prev</button>
+      <span>Page {{ pageNumber() }}</span>
+      <button (click)="nextPage()" [disabled]="pageNumber() * pageSize() >= totalCount()">Next</button>
+    </div>
+  </div>
+
+  <ng-template #loadingTpl>
+    <div class="loading">Loading tasks…</div>
+  </ng-template>
+</div>
