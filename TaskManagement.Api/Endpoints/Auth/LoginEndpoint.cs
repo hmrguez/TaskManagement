@@ -53,11 +53,6 @@ public class LoginEndpoint : Endpoint<LoginRequest, LoginResponse>
         }, cancellation: ct);
     }
 }
-using FastEndpoints;
-using Microsoft.AspNetCore.Identity;
-using TaskManagement.Api.Models;
-
-namespace TaskManagement.Api.Endpoints.Auth;
 
 public class SignUpEndpoint : Endpoint<SignUpRequest, SignUpResponse>
 {
