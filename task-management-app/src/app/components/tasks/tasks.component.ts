@@ -10,6 +10,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatTimepickerModule } from '@angular/material/timepicker';
 
 @Component({
   selector: 'app-tasks',
@@ -23,7 +26,10 @@ import { MatDividerModule } from '@angular/material/divider';
     MatCheckboxModule,
     MatButtonModule,
     MatIconModule,
-    MatDividerModule
+    MatDividerModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatTimepickerModule
   ],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.css'
@@ -40,12 +46,12 @@ export class TasksComponent {
   // create/edit
   newTitle = '';
   newDescription = '';
-  newDueDate: string | null = null; // yyyy-MM-ddTHH:mm
+  newDueDate: Date | null = null;
 
   editingId: number | null = null;
   editTitle = '';
   editDescription = '';
-  editDueDate: string | null = null;
+  editDueDate: Date | null = null;
 
   constructor(private tasksApi: TasksService) {
     effect(() => {
@@ -74,7 +80,7 @@ export class TasksComponent {
     if (!this.newTitle.trim()) return;
     const payload: any = { title: this.newTitle.trim() };
     if (this.newDescription.trim()) payload.description = this.newDescription.trim();
-    if (this.newDueDate) payload.dueDate = new Date(this.newDueDate).toISOString();
+    if (this.newDueDate) payload.dueDate = this.newDueDate.toISOString();
 
     this.loading.set(true);
     this.tasksApi.createTask(payload).subscribe({
@@ -95,7 +101,7 @@ export class TasksComponent {
     this.editingId = t.Id;
     this.editTitle = t.Title;
     this.editDescription = t.Description || '';
-    this.editDueDate = t.DueDate ? this.toLocalInputValue(t.DueDate) : null;
+    this.editDueDate = t.DueDate ? new Date(t.DueDate) : null;
   }
 
   cancelEdit() {
@@ -106,7 +112,7 @@ export class TasksComponent {
     if (this.editingId !== t.Id) return;
     const payload: any = { title: this.editTitle };
     payload.description = this.editDescription || undefined;
-    payload.dueDate = this.editDueDate ? new Date(this.editDueDate).toISOString() : undefined;
+    payload.dueDate = this.editDueDate ? this.editDueDate.toISOString() : undefined;
 
     this.loading.set(true);
     this.tasksApi.updateTask(t.Id, payload).subscribe({
@@ -144,17 +150,5 @@ export class TasksComponent {
   prevPage() {
     if (this.pageNumber() <= 1) return;
     this.pageNumber.set(this.pageNumber() - 1);
-  }
-
-  private toLocalInputValue(iso: string): string {
-    // Convert ISO to yyyy-MM-ddTHH:mm in local time for input[type=datetime-local]
-    const d = new Date(iso);
-    const pad = (n: number) => n.toString().padStart(2, '0');
-    const yyyy = d.getFullYear();
-    const mm = pad(d.getMonth() + 1);
-    const dd = pad(d.getDate());
-    const hh = pad(d.getHours());
-    const min = pad(d.getMinutes());
-    return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
   }
 }

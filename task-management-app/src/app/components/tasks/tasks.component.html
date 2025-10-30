@@ -15,7 +15,15 @@
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Due date</mat-label>
-            <input matInput type="datetime-local" [(ngModel)]="newDueDate" />
+            <input matInput [matDatepicker]="newPicker" [(ngModel)]="newDueDate" />
+            <mat-datepicker-toggle matIconSuffix [for]="newPicker"></mat-datepicker-toggle>
+            <mat-datepicker #newPicker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Time</mat-label>
+            <input matInput [matTimepicker]="newTimePicker" [(ngModel)]="newDueDate" [ngModelOptions]="{updateOn: 'blur'}" />
+            <mat-timepicker-toggle matIconSuffix [for]="newTimePicker"></mat-timepicker-toggle>
+            <mat-timepicker #newTimePicker></mat-timepicker>
           </mat-form-field>
           <button mat-raised-button color="primary" (click)="createTask()">
             <mat-icon>add</mat-icon>
@@ -64,7 +72,15 @@
               </mat-form-field>
               <mat-form-field appearance="outline">
                 <mat-label>Due date</mat-label>
-                <input matInput type="datetime-local" [(ngModel)]="editDueDate" />
+                <input matInput [matDatepicker]="editPicker" [(ngModel)]="editDueDate" />
+                <mat-datepicker-toggle matIconSuffix [for]="editPicker"></mat-datepicker-toggle>
+                <mat-datepicker #editPicker></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Time</mat-label>
+                <input matInput [matTimepicker]="editTimePicker" [(ngModel)]="editDueDate" [ngModelOptions]="{updateOn: 'blur'}" />
+                <mat-timepicker-toggle matIconSuffix [for]="editTimePicker"></mat-timepicker-toggle>
+                <mat-timepicker #editTimePicker></mat-timepicker>
               </mat-form-field>
               <button mat-raised-button color="primary" (click)="saveEdit(t)">Save</button>
               <button mat-button (click)="cancelEdit()">Cancel</button>
