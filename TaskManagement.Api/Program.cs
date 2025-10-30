@@ -1,6 +1,5 @@
 using System.Text;
 using FastEndpoints;
-using FastEndpoints.Security;
 using FastEndpoints.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -11,9 +10,10 @@ using TaskManagement.Api.Features.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add Entity Framework and Identity
+builder.Configuration.AddJsonFile("appsettings.secret.json", optional: true, reloadOnChange: false);
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddIdentity<User, IdentityRole>(options =>
     {
@@ -60,19 +60,15 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
-// Add authorization
 builder.Services.AddAuthorization();
 
-// Add JWT service
 builder.Services.AddScoped<IJwtService, JwtService>();
 
-// Add FastEndpoints
 builder.Services.AddFastEndpoints()
     .SwaggerDocument();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseOpenApi();
@@ -81,18 +77,15 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Use authentication and authorization
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Use FastEndpoints
 app.UseFastEndpoints(c =>
 {
     c.Endpoints.RoutePrefix = "api";
     c.Serializer.Options.PropertyNamingPolicy = null; // Use PascalCase
 });
 
-// Ensure database is created
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
