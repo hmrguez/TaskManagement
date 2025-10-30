@@ -37,8 +37,7 @@ import { MatMenuModule } from '@angular/material/menu';
     MatDialogModule,
     MatMenuModule
   ],
-  templateUrl: './tasks.component.html',
-  styleUrl: './tasks.component.css'
+  templateUrl: './tasks.component.html'
 })
 export class TasksComponent {
   // list & pagination
