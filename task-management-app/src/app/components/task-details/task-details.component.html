@@ -1,24 +1,25 @@
-<div class="max-w-[720px] mx-auto my-6 px-4">
-  <mat-card class="mat-elevation-z1">
-    <mat-card-title class="flex items-center gap-3">
-      <button mat-stroked-button color="primary" routerLink="/tasks" aria-label="Back to tasks">
-        <mat-icon>arrow_back</mat-icon>
-        Back
-      </button>
-      <span>Task details</span>
+<div class="max-w-[860px] mx-auto my-10 px-4">
+  <mat-card class="mat-elevation-z1 p-4">
+    <mat-card-title class="flex items-center justify-between gap-3 mb-2">
+      <div class="flex items-center gap-3">
+        <button mat-stroked-button color="primary" routerLink="/tasks" aria-label="Back to tasks">
+          <mat-icon>arrow_back</mat-icon>
+          Back
+        </button>
+      </div>
     </mat-card-title>
 
-    <mat-card-content>
-      <div *ngIf="loading()" class="p-6 text-black/60 flex items-center gap-2">
+    <mat-card-content class="pt-4">
+      <div *ngIf="loading()" class="p-8 text-black/60 flex items-center justify-center gap-2">
         <mat-icon>hourglass_empty</mat-icon>
         Loading…
       </div>
       <div *ngIf="error()" class="p-4 text-red-700">{{ error() }}</div>
 
       <ng-container *ngIf="!loading() && !error() && task() as t">
-        <div class="space-y-4 p-2">
+        <!-- View mode -->
+        <div *ngIf="!isEditing()" class="space-y-6 p-2">
           <div class="text-2xl font-semibold flex items-center gap-2">
-            <mat-icon color="primary">check_circle</mat-icon>
             <span [ngClass]="{'line-through text-gray-500': t.IsCompleted}">{{ t.Title }}</span>
           </div>
 
@@ -32,6 +33,49 @@
 
           <div class="text-sm text-black/60">
             Status: <span [ngClass]="t.IsCompleted ? 'text-green-700' : 'text-amber-700'">{{ t.IsCompleted ? 'Completed' : 'Pending' }}</span>
+          </div>
+
+          <!-- Bottom actions for view mode: Edit (left) and Delete (right) -->
+          <div class="flex justify-between items-center pt-2">
+            <button mat-stroked-button color="warn" (click)="deleteTask()">
+              <mat-icon>delete</mat-icon>
+              Delete
+            </button>
+            <button mat-stroked-button color="primary" (click)="startEdit()">
+              <mat-icon>edit</mat-icon>
+              Edit
+            </button>
+          </div>
+        </div>
+
+        <!-- Edit mode -->
+        <div *ngIf="isEditing()" class="space-y-6 p-2">
+          <div class="flex flex-col gap-3">
+            <mat-form-field>
+              <mat-label>Title</mat-label>
+              <input matInput type="text" [(ngModel)]="editTitle" />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Description</mat-label>
+              <input matInput type="text" [(ngModel)]="editDescription" />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Due date</mat-label>
+              <input matInput [matDatepicker]="editPicker" [(ngModel)]="editDueDate" />
+              <mat-datepicker-toggle matIconSuffix [for]="editPicker"></mat-datepicker-toggle>
+              <mat-datepicker #editPicker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Time</mat-label>
+              <input matInput [matTimepicker]="editTimePicker" [(ngModel)]="editDueDate" [ngModelOptions]="{updateOn: 'blur'}" />
+              <mat-timepicker-toggle matIconSuffix [for]="editTimePicker"></mat-timepicker-toggle>
+              <mat-timepicker #editTimePicker></mat-timepicker>
+            </mat-form-field>
+          </div>
+
+          <div class="flex justify-between items-center pt-2">
+            <button mat-button (click)="cancelEdit()">Cancel</button>
+            <button mat-raised-button color="primary" (click)="saveEdit()">Save</button>
           </div>
         </div>
       </ng-container>

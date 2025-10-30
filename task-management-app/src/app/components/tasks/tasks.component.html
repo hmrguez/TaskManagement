@@ -21,7 +21,7 @@
         <mat-card class="flex justify-between p-3 mat-elevation-z0" *ngFor="let t of tasks()">
           <div class="flex gap-3 flex-1">
             <mat-checkbox [checked]="t.IsCompleted" (change)="toggleCompleted(t)"></mat-checkbox>
-            <div class="flex items-center gap-3 w-full" *ngIf="editingId !== t.Id; else editTpl">
+            <div class="flex items-center gap-3 w-full">
               <div class="font-semibold truncate flex-1" [ngClass]="{'line-through text-gray-500': t.IsCompleted}">{{ t.Title }}</div>
               <div class="text-sm text-gray-500 whitespace-nowrap" *ngIf="t.DueDate">{{ t.DueDate | date: 'mediumDate' }} {{ t.DueDate | date: 'shortTime' }}</div>
             </div>
@@ -34,7 +34,7 @@
                   <mat-icon>visibility</mat-icon>
                   <span>See details</span>
                 </button>
-                <button mat-menu-item (click)="startEdit(t)">
+                <button mat-menu-item [routerLink]="['/tasks', t.Id]" [queryParams]="{ edit: 1 }">
                   <mat-icon>edit</mat-icon>
                   <span>Edit</span>
                 </button>
@@ -45,33 +45,6 @@
               </mat-menu>
             </div>
           </div>
-
-          <ng-template #editTpl>
-            <div class="flex gap-3 flex-wrap items-end w-full">
-              <mat-form-field class="flex-1 basis-[220px]">
-                <mat-label>Title</mat-label>
-                <input matInput type="text" [(ngModel)]="editTitle" />
-              </mat-form-field>
-              <mat-form-field class="flex-1 basis-[220px]">
-                <mat-label>Description</mat-label>
-                <input matInput type="text" [(ngModel)]="editDescription" />
-              </mat-form-field>
-              <mat-form-field>
-                <mat-label>Due date</mat-label>
-                <input matInput [matDatepicker]="editPicker" [(ngModel)]="editDueDate" />
-                <mat-datepicker-toggle matIconSuffix [for]="editPicker"></mat-datepicker-toggle>
-                <mat-datepicker #editPicker></mat-datepicker>
-              </mat-form-field>
-              <mat-form-field>
-                <mat-label>Time</mat-label>
-                <input matInput [matTimepicker]="editTimePicker" [(ngModel)]="editDueDate" [ngModelOptions]="{updateOn: 'blur'}" />
-                <mat-timepicker-toggle matIconSuffix [for]="editTimePicker"></mat-timepicker-toggle>
-                <mat-timepicker #editTimePicker></mat-timepicker>
-              </mat-form-field>
-              <button mat-raised-button color="primary" (click)="saveEdit(t)">Save</button>
-              <button mat-button class="ml-1" (click)="cancelEdit()">Cancel</button>
-            </div>
-          </ng-template>
         </mat-card>
 
         <div class="flex justify-center items-center gap-3 mt-4">
