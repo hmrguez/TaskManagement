@@ -2,13 +2,13 @@ import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from './services/auth.service';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, RouterOutlet, RouterLink,
-    import('@angular/material/toolbar').then(m => m.MatToolbarModule),
-    import('@angular/material/button').then(m => m.MatButtonModule),
-    import('@angular/material/icon').then(m => m.MatIconModule)
+  imports: [CommonModule, RouterOutlet, RouterLink, MatToolbarModule, MatButtonModule, MatIconModule
   ],
   template: `
     <mat-toolbar color="primary" class="mat-elevation-z2">

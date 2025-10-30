@@ -1,20 +1,29 @@
-import { Component, computed, effect, signal } from '@angular/core';
+import { Component, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TasksService } from '../../services/tasks.service';
 import { Task } from '../../models/task.models';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  imports: [CommonModule, FormsModule,
-    import('@angular/material/card').then(m => m.MatCardModule),
-    import('@angular/material/form-field').then(m => m.MatFormFieldModule),
-    import('@angular/material/input').then(m => m.MatInputModule),
-    import('@angular/material/checkbox').then(m => m.MatCheckboxModule),
-    import('@angular/material/button').then(m => m.MatButtonModule),
-    import('@angular/material/icon').then(m => m.MatIconModule),
-    import('@angular/material/divider').then(m => m.MatDividerModule)
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDividerModule
   ],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.css'
