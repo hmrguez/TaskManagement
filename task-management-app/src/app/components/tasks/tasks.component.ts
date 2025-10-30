@@ -7,7 +7,15 @@ import { Task } from '../../models/task.models';
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,
+    import('@angular/material/card').then(m => m.MatCardModule),
+    import('@angular/material/form-field').then(m => m.MatFormFieldModule),
+    import('@angular/material/input').then(m => m.MatInputModule),
+    import('@angular/material/checkbox').then(m => m.MatCheckboxModule),
+    import('@angular/material/button').then(m => m.MatButtonModule),
+    import('@angular/material/icon').then(m => m.MatIconModule),
+    import('@angular/material/divider').then(m => m.MatDividerModule)
+  ],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.css'
 })

@@ -1,34 +1,37 @@
 <div class="auth-container">
-  <h2>{{ mode === 'login' ? 'Login to manage your tasks' : 'Sign up to start managing tasks' }}</h2>
+  <mat-card class="mat-elevation-z2">
+    <mat-card-title>{{ mode === 'login' ? 'Login to manage your tasks' : 'Sign up to start managing tasks' }}</mat-card-title>
+    <mat-card-content>
+      <form (ngSubmit)="submit()" #f="ngForm" class="auth-form">
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" name="email" [(ngModel)]="email" required />
+        </mat-form-field>
 
-  <form (ngSubmit)="submit()" #f="ngForm" class="auth-form">
-    <label>
-      Email
-      <input type="email" name="email" [(ngModel)]="email" required />
-    </label>
+        <mat-form-field appearance="outline" class="full" *ngIf="mode === 'signup'">
+          <mat-label>Username</mat-label>
+          <input matInput type="text" name="userName" [(ngModel)]="userName" />
+        </mat-form-field>
 
-    <label *ngIf="mode === 'signup'">
-      Username
-      <input type="text" name="userName" [(ngModel)]="userName" />
-    </label>
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Password</mat-label>
+          <input matInput type="password" name="password" [(ngModel)]="password" required />
+        </mat-form-field>
 
-    <label>
-      Password
-      <input type="password" name="password" [(ngModel)]="password" required />
-    </label>
+        <button mat-raised-button color="primary" type="submit" [disabled]="loading || !f.form.valid">
+          {{ mode === 'login' ? 'Login' : 'Sign up' }}
+        </button>
 
-    <button type="submit" [disabled]="loading || !f.form.valid">
-      {{ mode === 'login' ? 'Login' : 'Sign up' }}
-    </button>
+        <div class="error" *ngIf="error">{{ error }}</div>
+      </form>
 
-    <div class="error" *ngIf="error">{{ error }}</div>
-  </form>
-
-  <p class="switch">
-    <span *ngIf="mode === 'login'">Don't have an account?</span>
-    <span *ngIf="mode === 'signup'">Already have an account?</span>
-    <button type="button" (click)="switchMode(mode === 'login' ? 'signup' : 'login')">
-      {{ mode === 'login' ? 'Create an account' : 'Go to login' }}
-    </button>
-  </p>
+      <p class="switch">
+        <span *ngIf="mode === 'login'">Don't have an account?</span>
+        <span *ngIf="mode === 'signup'">Already have an account?</span>
+        <button mat-button type="button" (click)="switchMode(mode === 'login' ? 'signup' : 'login')">
+          {{ mode === 'login' ? 'Create an account' : 'Go to login' }}
+        </button>
+      </p>
+    </mat-card-content>
+  </mat-card>
 </div>

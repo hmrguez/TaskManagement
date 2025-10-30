@@ -1,55 +1,90 @@
 <div class="tasks-container">
-  <h2>Tasks</h2>
-
-  <div class="create-task">
-    <h3>Create a new task</h3>
-    <div class="form-row">
-      <input type="text" placeholder="Task title" [(ngModel)]="newTitle" />
-      <input type="text" placeholder="Task description" [(ngModel)]="newDescription" />
-      <input type="datetime-local" [(ngModel)]="newDueDate" />
-      <button (click)="createTask()">Add Task</button>
-    </div>
-  </div>
-
-  <div *ngIf="error()" class="error">{{ error() }}</div>
-
-  <div class="list" *ngIf="!loading(); else loadingTpl">
-    <div class="task" *ngFor="let t of tasks()">
-      <div class="left">
-        <input type="checkbox" [checked]="t.IsCompleted" (change)="toggleCompleted(t)" />
-        <div class="info" *ngIf="editingId !== t.Id; else editTpl">
-          <div class="title" [class.completed]="t.IsCompleted">{{ t.Title }}</div>
-          <div class="meta">
-            <span *ngIf="t.Description">{{ t.Description }}</span>
-            <span *ngIf="t.DueDate">Due: {{ t.DueDate | date: 'short' }}</span>
-          </div>
+  <mat-card class="mat-elevation-z1">
+    <mat-card-title>Tasks</mat-card-title>
+    <mat-card-content>
+      <section class="create-task">
+        <h3>Create a new task</h3>
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="grow">
+            <mat-label>Task title</mat-label>
+            <input matInput type="text" [(ngModel)]="newTitle" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="grow">
+            <mat-label>Description</mat-label>
+            <input matInput type="text" [(ngModel)]="newDescription" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Due date</mat-label>
+            <input matInput type="datetime-local" [(ngModel)]="newDueDate" />
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="createTask()">
+            <mat-icon>add</mat-icon>
+            Add Task
+          </button>
         </div>
-      </div>
+      </section>
 
-      <div class="actions" *ngIf="editingId !== t.Id">
-        <button (click)="startEdit(t)">Edit</button>
-        <button (click)="deleteTask(t)" class="danger">Delete</button>
-      </div>
+      <mat-divider></mat-divider>
 
-      <ng-template #editTpl>
-        <div class="edit-form">
-          <input type="text" [(ngModel)]="editTitle" />
-          <input type="text" [(ngModel)]="editDescription" placeholder="Description" />
-          <input type="datetime-local" [(ngModel)]="editDueDate" />
-          <button (click)="saveEdit(t)">Save</button>
-          <button (click)="cancelEdit()">Cancel</button>
+      <div *ngIf="error()" class="error mat-body-2">{{ error() }}</div>
+
+      <section class="list" *ngIf="!loading(); else loadingTpl">
+        <mat-card class="task mat-elevation-z0" *ngFor="let t of tasks()">
+          <div class="left">
+            <mat-checkbox [checked]="t.IsCompleted" (change)="toggleCompleted(t)"></mat-checkbox>
+            <div class="info" *ngIf="editingId !== t.Id; else editTpl">
+              <div class="title" [class.completed]="t.IsCompleted">{{ t.Title }}</div>
+              <div class="meta">
+                <span *ngIf="t.Description">{{ t.Description }}</span>
+                <span *ngIf="t.DueDate">Due: {{ t.DueDate | date: 'short' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="actions" *ngIf="editingId !== t.Id">
+            <button mat-button color="primary" (click)="startEdit(t)">
+              <mat-icon>edit</mat-icon>
+              Edit
+            </button>
+            <button mat-button color="warn" (click)="deleteTask(t)">
+              <mat-icon>delete</mat-icon>
+              Delete
+            </button>
+          </div>
+
+          <ng-template #editTpl>
+            <div class="edit-form">
+              <mat-form-field appearance="outline" class="grow">
+                <mat-label>Title</mat-label>
+                <input matInput type="text" [(ngModel)]="editTitle" />
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="grow">
+                <mat-label>Description</mat-label>
+                <input matInput type="text" [(ngModel)]="editDescription" />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Due date</mat-label>
+                <input matInput type="datetime-local" [(ngModel)]="editDueDate" />
+              </mat-form-field>
+              <button mat-raised-button color="primary" (click)="saveEdit(t)">Save</button>
+              <button mat-button (click)="cancelEdit()">Cancel</button>
+            </div>
+          </ng-template>
+        </mat-card>
+
+        <div class="pagination">
+          <button mat-stroked-button (click)="prevPage()" [disabled]="pageNumber() <= 1">Prev</button>
+          <span>Page {{ pageNumber() }}</span>
+          <button mat-stroked-button (click)="nextPage()" [disabled]="pageNumber() * pageSize() >= totalCount()">Next</button>
+        </div>
+      </section>
+
+      <ng-template #loadingTpl>
+        <div class="loading">
+          <mat-icon>hourglass_empty</mat-icon>
+          Loading tasks…
         </div>
       </ng-template>
-    </div>
-
-    <div class="pagination">
-      <button (click)="prevPage()" [disabled]="pageNumber() <= 1">Prev</button>
-      <span>Page {{ pageNumber() }}</span>
-      <button (click)="nextPage()" [disabled]="pageNumber() * pageSize() >= totalCount()">Next</button>
-    </div>
-  </div>
-
-  <ng-template #loadingTpl>
-    <div class="loading">Loading tasks…</div>
-  </ng-template>
+    </mat-card-content>
+  </mat-card>
 </div>

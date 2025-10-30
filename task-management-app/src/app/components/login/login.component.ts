@@ -7,7 +7,12 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,
+    import('@angular/material/card').then(m => m.MatCardModule),
+    import('@angular/material/form-field').then(m => m.MatFormFieldModule),
+    import('@angular/material/input').then(m => m.MatInputModule),
+    import('@angular/material/button').then(m => m.MatButtonModule)
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
