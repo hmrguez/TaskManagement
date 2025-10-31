@@ -108,7 +108,7 @@ Use the built‑in Swagger UI in development to discover all available endpoints
    ```
 
 5. Visit Swagger (development):
-   - https://localhost:5001/swagger or http://localhost:5000/swagger (depending on Kestrel ports)
+   - https://localhost:5115/swagger or http://localhost:7255/swagger (depending on Kestrel ports)
 
 
 ### 2) Frontend — task-management-app (Angular)
