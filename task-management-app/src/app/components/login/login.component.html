@@ -3,17 +3,17 @@
     <mat-card-title>{{ mode === 'login' ? 'Login to manage your tasks' : 'Sign up to start managing tasks' }}</mat-card-title>
     <mat-card-content>
       <form (ngSubmit)="submit()" #f="ngForm" class="flex flex-col gap-3 mt-3">
-        <mat-form-field appearance="outline" class="w-full">
+        <mat-form-field class="w-full">
           <mat-label>Email</mat-label>
           <input matInput type="email" name="email" [(ngModel)]="email" required />
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="w-full" *ngIf="mode === 'signup'">
+        <mat-form-field class="w-full" *ngIf="mode === 'signup'">
           <mat-label>Username</mat-label>
           <input matInput type="text" name="userName" [(ngModel)]="userName" />
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="w-full">
+        <mat-form-field class="w-full">
           <mat-label>Password</mat-label>
           <input matInput type="password" name="password" [(ngModel)]="password" required />
         </mat-form-field>
