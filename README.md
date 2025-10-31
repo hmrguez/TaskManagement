@@ -225,4 +225,5 @@ Use the built‑in Swagger UI in development to discover all available endpoints
 - Role‑based authorization (e.g., admin)
 - Refresh tokens and token revocation
 - CI/CD pipeline and containerization (Docker Compose for API + DB + Frontend)
+- Personally I don't like Material as much due to the lack of personalization it offers. I prefer other component libraries like [PrimeNg](https://primeng.org/) or [Spartan UI](https://spartan.ng) 
 
