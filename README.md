@@ -124,18 +124,14 @@ Use the built‑in Swagger UI in development to discover all available endpoints
    # or: pnpm install
    ```
 
-3. Configure environment (if needed):
-   - Ensure the API base URL matches your backend (often `http://localhost:5000` or `https://localhost:5001`).
-   - Edit the Angular environment file to point to your API URL, e.g. `src/environments/environment.ts` (or wherever the app keeps base URLs).
-
-4. Start the dev server:
+3. Start the dev server:
    ```bash
    npm start
    # or: ng serve
    ```
 
-5. Open the app in your browser:
-   - Usually http://localhost:4200
+4. Open the app in your browser:
+   - Running on http://localhost:4200
 
 
 ## Using the App
@@ -149,23 +145,25 @@ Use the built‑in Swagger UI in development to discover all available endpoints
 
 ## Screenshots (placeholders)
 
-Replace the paths below with your actual screenshots when available.
-
-- Landing / Dashboard
+- Sign in / Sign up
   
-  ![Landing](docs/images/landing.png)
+  ![Auth](docs/img/sign-in-up.png)
 
 - Tasks List (with search and pagination)
   
-  ![Tasks List](docs/images/tasks-list.png)
+  ![Tasks List](docs/img/list.png)
 
-- Create / Edit Task Dialog
+- Create Task Dialog
   
-  ![Task Dialog](docs/images/task-dialog.png)
+  ![Task Dialog](docs/img/create.png)
 
-- Sign In / Sign Up
+- Task Details
   
-  ![Auth](docs/images/auth.png)
+  ![Task Dialog](docs/img/details.png)
+
+- Edit task
+  
+  ![Auth](docs/img/edit.png)
 
 
 ## Development Notes
@@ -178,11 +176,47 @@ Replace the paths below with your actual screenshots when available.
 
 ## Testing
 
-- API: You can add xUnit/NUnit tests for endpoints and services.
-- Frontend: Use Angular’s `ng test` for unit tests and `ng e2e` for end‑to‑end tests (if configured).
+### API — Integration tests (.NET + xUnit)
+
+- Location: `TaskManagement.IntegrationTests`
+- How they work:
+  - Tests boot the real API in-memory using `WebApplicationFactory` via `CustomWebApplicationFactory`.
+  - EF Core is swapped to the InMemory provider; the test DB is created fresh for the suite (`EnsureDeleted`/`EnsureCreated`). No local PostgreSQL is required.
+  - JWT settings are provided via in-memory configuration so auth flows behave like production.
+- What’s covered:
+  - `AuthTests`: sign up, login happy path, invalid login (401), duplicate sign-up (409).
+  - `TodosTests`: full CRUD flow for the authenticated user, pagination, get-by-id, updates, delete, and NotFound cases; also verifies 401 when unauthenticated.
+- How to run:
+  ```bash
+  # from repo root
+  dotnet test TaskManagement.IntegrationTests/TaskManagement.IntegrationTests.csproj
+  # or run the whole solution
+  dotnet test TaskManagement.sln
+  ```
+- Notes: Tests are isolated and do not hit external services or a real DB; they exercise the HTTP pipeline end-to-end.
+
+### Frontend — Unit tests (Angular + Jest)
+
+- Location: `task-management-app`
+- Stack: `jest` + `jest-preset-angular` on `jsdom`. Config lives in `task-management-app/jest.config.js` and test environment is prepared in `task-management-app/setup-jest.ts` (`zone.js/testing` + Angular TestBed initialization).
+- Test files: `*.spec.ts` under `src/`.
+- Useful config bits:
+  - `testMatch: ['**/?(*.)+(spec).ts']`
+  - Path mapping: `^src/(.*)$ -> <rootDir>/src/$1`
+  - Coverage includes `src/**/*.{ts,html}` (excluding `main.ts` and environments)
+- How to run:
+  ```bash
+  cd task-management-app
+  npm test               # single run
+  npx jest --watch       # watch mode
+  npm test -- --coverage # coverage report
+  ```
+- Notes:
+  - Although Angular CLI’s Karma target remains in `angular.json`, this project uses Jest via the `npm test` script.
+  - `setup-jest.ts` initializes Angular’s testing environment; import/DOM shims come from `jest-environment-jsdom`.
 
 
-## Roadmap / Possible Enhancements
+## Roadmap / Possible Enhancements (out of the scope of the project)
 
 - Update endpoints (PUT/PATCH) for tasks
 - Soft‑delete or archive tasks
@@ -192,7 +226,3 @@ Replace the paths below with your actual screenshots when available.
 - Refresh tokens and token revocation
 - CI/CD pipeline and containerization (Docker Compose for API + DB + Frontend)
 
-
-## License
-
-This project is provided as part of a take‑home assignment. Choose and add a license if you plan to open‑source it (e.g., MIT).
