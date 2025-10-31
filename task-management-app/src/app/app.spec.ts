@@ -1,10 +1,22 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
+import { AuthService } from './services/auth.service';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [App],
+      imports: [App, RouterTestingModule],
+      providers: [
+        {
+          provide: AuthService,
+          useValue: {
+            isAuthenticated: jest.fn().mockReturnValue(false),
+            user: jest.fn().mockReturnValue(null),
+            logout: jest.fn()
+          }
+        }
+      ]
     }).compileComponents();
   });
 
@@ -18,6 +30,7 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, task-management-app');
+    // The toolbar button contains the app title "Task Manager"
+    expect(compiled.textContent).toContain('Task Manager');
   });
 });
